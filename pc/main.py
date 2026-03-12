@@ -1,6 +1,14 @@
 import pygame
+
 from input.wheel_input import WheelInput
 from gui.dashboard import Dashboard
+from control.control_loop import ControlLoop
+
+
+ESP32_IP = "192.168.1.100"
+ESP32_PORT = 3333
+
+ENABLE_NETWORK = False
 
 
 def main():
@@ -9,8 +17,19 @@ def main():
 
     wheel = WheelInput()
     gui = Dashboard()
+    
+    print(f"EnabbleNetwork: {ENABLE_NETWORK}")
+
+    control = ControlLoop(
+        wheel,
+        gui,
+        enable_network=ENABLE_NETWORK,
+        host=ESP32_IP,
+        port=ESP32_PORT
+    )
 
     clock = pygame.time.Clock()
+
     running = True
 
     while running:
@@ -24,12 +43,13 @@ def main():
 
         pygame.event.pump()
 
-        control = wheel.read()
+        control.update()
 
-        gui.update(control)
         gui.draw()
 
-        clock.tick(60)
+        clock.tick(50)
+
+    control.shutdown()
 
     pygame.quit()
 
