@@ -1,7 +1,10 @@
+#include <Arduino.h>
 #include <WiFi.h>
 
-const char* ssid = "YOUR_WIFI";
-const char* password = "YOUR_PASSWORD";
+#include "secrets.h"
+
+const char* ssid = WIFI_SSID;
+const char* password = WIFI_PASS;
 
 WiFiServer server(3333);
 
@@ -39,37 +42,6 @@ void setup() {
   Serial.println("TCP server started");
   Serial.println("Waiting for PC client...");
 }
-
-
-void loop() {
-
-  WiFiClient client = server.available();
-
-  if (!client) {
-    delay(10);
-    return;
-  }
-
-  Serial.println("Client connected");
-  Serial.print("Client IP: ");
-  Serial.println(client.remoteIP());
-
-  while (client.connected()) {
-
-    if (client.available() >= 10) {
-
-      uint8_t packet[10];
-
-      client.read(packet, 10);
-
-      parsePacket(packet);
-    }
-  }
-
-  Serial.println("Client disconnected");
-  client.stop();
-}
-
 
 
 void parsePacket(uint8_t *packet) {
@@ -134,3 +106,37 @@ void parsePacket(uint8_t *packet) {
     Serial.println(buttons, BIN);
   }
 }
+
+
+
+void loop() {
+
+  WiFiClient client = server.available();
+
+  if (!client) {
+    delay(10);
+    return;
+  }
+
+  Serial.println("Client connected");
+  Serial.print("Client IP: ");
+  Serial.println(client.remoteIP());
+
+  while (client.connected()) {
+
+    if (client.available() >= 10) {
+
+      uint8_t packet[10];
+
+      client.read(packet, 10);
+
+      parsePacket(packet);
+    }
+  }
+
+  Serial.println("Client disconnected");
+  client.stop();
+}
+
+
+
