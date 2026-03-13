@@ -1,3 +1,5 @@
+// Only wifi and TCP server code, no car control logic here. This is a simple debug receiver that can be used to test the communication between the PC client and the ESP32. It can also be used to visualize the control inputs in the Arduino Plotter.
+
 #include <Arduino.h>
 #include <WiFi.h>
 
